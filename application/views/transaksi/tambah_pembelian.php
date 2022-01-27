@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4>
-                            Tambah Transaksi
+                            Tambah Pembelian
                         </h4>
 
                     </div>
@@ -21,12 +21,12 @@
                             </div>
                             <div class="form-group">
 
-                                <label for="">Pelanggan</label>
+                                <label for="">Supplier</label>
                                 <div class="input-group">
                                     <select type="text" class="form-control select2" name="jenisBarang">
-                                        <option value="">Pilih Pelanggan</option>
-                                        <?php foreach ($pelanggan as $plg) : ?>
-                                            <option value="<?php echo $plg['nama'] ?>"><?php echo $plg['nama'] ?></option>
+                                        <option value="">Pilih Supplier</option>
+                                        <?php foreach ($supplier as $supp) : ?>
+                                            <option value="<?php echo $supp['nama'] ?>"><?php echo $supp['nama'] ?></option>
                                         <?php endforeach ?>
                                     </select>
                                 </div>
@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="col-3">
                                 <div class="form-group mb-0">
-                                    <label for="">Kode Barang</label>
+                                    <label for="">Nama Barang</label>
 
                                 </div>
                             </div>
@@ -86,12 +86,9 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div class="form-group my-2">
-                                        <select type="text" class="form-control selectric" name="kode[]">
-                                            <option value="">Pilih Barang</option>
-                                            <?php foreach ($barang as $brg) : ?>
-                                                <option value="<?php echo $brg['kodeBarang'] ?>"><?php echo $brg['kodeBarang'] ?></option>
-                                            <?php endforeach ?>
-                                        </select>
+                                        <input type="text" class="form-control" name="nama[]">
+                                            
+                                        
                                     </div>
                                 </div>
 
@@ -132,8 +129,6 @@
         </div>
     </section>
 </div>
-<!-- <script src="<?= base_url() ?>assets/bundles/select2/dist/js/select2.full.min.js"></script> -->
-<script src="<?= base_url() ?>assets/bundles/jquery-selectric/jquery.selectric.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
     // $(document).ready(function() {

@@ -13,29 +13,30 @@
 
           </div>
           <div class="card-body">
-            <div class="d-flex">
-              <div class="form-group">
-                <label>Periode Akuntansi</label>
-                <div class="d-flex align-items-center">
-                  <input type="date" class="form-control mr-3" placeholder="Tanggal Mulai">
-                  <h6 class="mr-3 my-0 weight-normal">
-                    s/d
-                  </h6>
-                  <input type="date" class="form-control mr-3" placeholder="Tanggal Mulai">
-                  <div class="btn btn-primary d-flex align-items-center">
-                    <i class="fas fa-sort-amount-up mr-2"></i>
-                    Filter
+            <form action="<?= base_url() ?>master_data/saldo_awal" method="post" enctype="multipart/form-data">
+              <div class="d-flex">
+                <div class="form-group">
+                  <label>Periode Akuntansi</label>
+                  <div class="d-flex align-items-center">
+                    <input type="date" class="form-control mr-3" name="mulai" value="<?=$tgl['mulai']?>">
+                    <h6 class="mr-3 my-0 weight-normal">
+                      s/d
+                    </h6>
+                    <input type="date" class="form-control mr-3" name="selesai" value="<?=$tgl['selesai']?>">
+                    <button type="submit" class="btn btn-primary d-flex align-items-center">
+                      <i class="fas fa-sort-amount-up mr-2"></i>
+                      Filter
+                    </button>
                   </div>
                 </div>
               </div>
-
-            </div>
+            </form>
             <div class="table-responsive">
               <table class="table  table-hover table-striped" id="table-1" style="width:100%;">
                 <thead>
                   <tr>
                     <th width="10px">No</th>
-                    <th >Kode Akun</th>
+                    <th>Kode Akun</th>
                     <th>Jenis Akun</th>
                     <th>Nama Akun</th>
                     <th>Saldo Akhir</th>
@@ -49,9 +50,9 @@
                     <tr>
                       <td class="text-center"><?php echo $i++ ?></td>
                       <td><?= $ak['kodeAkun'] ?></td>
-                      <td><?= $ak['jenisAkun'] ?></td>
+                      <td><?= $ak['namaJenis'] ?></td>
                       <td><?= $ak['namaAkun'] ?></td>
-                      <td>Rp <?= number_format($ak['saldoAkhir'] , 0, ",", ",") ?></td>
+                      <td>Rp <?= number_format($ak['saldoAkhir'], 0, ",", ",") ?></td>
                       <td>
                         <div class="btn btn-info">Detail</div>
                       </td>

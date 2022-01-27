@@ -8,9 +8,12 @@
                             Data Perkiraan Akun
                         </h4>
                         <div class="d-flex">
-                            <a href="<?=base_url()?>master_data/tambah_akun">
-                        
-                            <div class="btn btn-success"><i class="fas fa-plus-circle mr-2"></i>Tambah Akun</div>
+                            <a href="<?= base_url() ?>master_data/tambah_akun">
+
+                                <div class="btn btn-success mr-2"><i class="fas fa-plus-circle mr-2"></i>Tambah Akun</div>
+                            </a>
+                            <a href="<?= base_url() ?>master_data/jenis_akun">
+                                <div class="btn btn-dark"><i class="fa fa-cog mr-2"></i>Jenis Akun</div>
                             </a>
                         </div>
 
@@ -34,27 +37,41 @@
 
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $i = 1;
-                                    foreach($akun as $ak) :?>
-                                    <tr>
-                                        <td><?php echo $i++; ?></td>
-                                        <td><?=$ak['namaAkun'] ?></td>
-                                        <td><?=$ak['kodeAkun'] ?></td>
-                                        <td><?=$ak['jenisAkun'] ?></td>
-                                        <td><?=$ak['debit'] ?></td>
-                                        <td><?=$ak['kredit'] ?></td>
-                                        <td class="d-flex">
-                                            <div class="btn btn-primary d-flex align-items-center mr-2">
-                                                <i class="fas fa-edit mr-2"></i>
-                                                Edit
-                                            </div>
-                                            <div class="btn btn-danger d-flex align-items-center">
-                                                <i class="far fa-trash-alt mr-2"></i>
-                                                Hapus
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    foreach ($akun as $ak) : ?>
+                                        <tr id="<?php echo $ak['idAkun'] ?>">
+                                            <td><?php echo $i++; ?></td>
+                                            <td><?= $ak['namaAkun'] ?></td>
+                                            <td><?= $ak['kodeAkun'] ?></td>
+                                            <td><?= $ak['namaJenis'] ?></td>
+                                            <td>
+                                                <?php
+                                                if ($ak['debit']) {
+                                                    echo $ak['debit'];
+                                                } else {
+                                                    echo "-";
+                                                } ?></td>
+                                            <td><?php
+                                                if ($ak['debit']) {
+                                                    echo $ak['debit'];
+                                                } else {
+                                                    echo "-";
+                                                } ?></td>
+                                            <td class="d-flex">
+                                                <a href="<?=base_url()?>master_data/edit_akun/<?php echo $ak['idAkun'] ?>">
+                                                    <div class="btn btn-primary d-flex align-items-center mr-2">
+                                                        <i class="fas fa-edit mr-2"></i>
+                                                        Edit
+                                                    </div>
+                                                </a>
+
+                                                <button class="btn btn-danger d-flex align-items-center remove" id="swal-6">
+                                                    <i class="far fa-trash-alt mr-2"></i>
+                                                    Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
                                     <?php endforeach ?>
 
                                 </tbody>
@@ -66,3 +83,34 @@
         </div>
     </section>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(".remove").click(function() {
+        var id = $(this).parents("tr").attr("id");
+        swal({
+            title: "Hapus Data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: '<?= base_url() ?>master_data/delete_akun/' + id,
+                    type: 'DELETE',
+                    error: function() {
+                        alert('Something is wrong');
+                    },
+                    success: function(data) {
+                        swal({
+                            title: "Data Telah Terhapus"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }
+                });
+            } else {
+                // swal("Batal");
+            }
+        });
+    });
+</script>

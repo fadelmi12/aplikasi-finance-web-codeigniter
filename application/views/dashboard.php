@@ -9,7 +9,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                                         <div class="card-content">
                                             <h5 class="font-15">Total Data Akun</h5>
-                                            <h2 class="mb-3 font-18">Rp </h2>
+                                            <h2 class="mb-3 font-18"><?=$akun?> Akun</h2>
                                             <!-- <p class="mb-0"><span class="col-green">10%</span> Increase</p> -->
                                         </div>
                                     </div>
@@ -31,13 +31,9 @@
                                 <div class="row ">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                                         <div class="card-content">
-                                            <h5 class="font-15"> Total Data Transaksi</h5>
-                                            <a href="<?= base_url() ?>perencanaan">
-                                                <h2 class="mb-3 font-16">Buka Perencanaan</h2>
-                                            </a>
-
-                                            <!-- <p class="mb-0"><span class="col-orange">09%</span> Decrease</p> -->
-                                        </div>
+                                            <h5 class="font-15"> Total Penjualan</h5>
+                                                <h2 class="mb-3 font-18"><?=$penjualan?></h2>
+                                            </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
                                         <div class="banner-img">
@@ -57,12 +53,9 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                                         <div class="card-content">
                                             <h5 class="font-15">Saldo</h5>
-                                            <a href="<?= base_url() ?>transaksi">
-
-                                                <h2 class="mb-3 font-16">Buka Transaksi</h2>
-                                            </a>
-                                            <!-- <p class="mb-0"><span class="col-green">18%</span>
-                                            Increase</p> -->
+                                                <h2 class="mb-3 font-18 ">
+                                                Rp <?= number_format($saldo->saldoAkhir, 0, ",", ",") ?></h2>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -97,7 +90,7 @@
                     <div class="card-body">
                         <div class="summary">
                             <div class="summary-chart active" data-tab-group="summary-tab" id="summary-chart">
-                                <div id="chart3" class="chartsh"></div>
+                                <div id="chart1" class="chartsh"></div>
                             </div>
                             <div data-tab-group="summary-tab" id="summary-text">
                             </div>
@@ -108,4 +101,5 @@
         </div>
 
     </section>
+    
 </div>

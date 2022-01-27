@@ -9,7 +9,10 @@
                         </h4>
                         <div class="d-flex">
                             <div class="btn btn-warning mr-2"><i class="fas fa-print mr-2"></i></i>Cetak PDF</div>
-                            <div class="btn btn-success"><i class="fas fa-plus-circle mr-2"></i>Tambah Data</div>
+                            <a href="<?= base_url() ?>transaksi/tambah_pembelian">
+
+                                <div class="btn btn-success"><i class="fas fa-plus-circle mr-2"></i>Tambah Data</div>
+                            </a>
                         </div>
 
                     </div>
@@ -24,7 +27,7 @@
                                         <th>Tanggal</th>
                                         <th>Vendor</th>
                                         <th>Keterangan</th>
-                                        <th>Total</th>
+                                        
                                         <th>Bayar</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -36,9 +39,6 @@
                                             1
                                         </td>
                                         <td>1</td>
-                                        <td>
-                                            1
-                                        </td>
                                         <td>
                                             1
                                         </td>

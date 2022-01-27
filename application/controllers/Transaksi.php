@@ -41,4 +41,12 @@ class Transaksi extends CI_Controller
         $this->load->view('template/footer');
     }
 
+    public function tambah_pembelian()
+    {
+        $data['supplier'] = $this->Model_akun->get_supplier()->result_array();
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('transaksi/tambah_pembelian', $data);
+        $this->load->view('template/footer');
+    }
 }

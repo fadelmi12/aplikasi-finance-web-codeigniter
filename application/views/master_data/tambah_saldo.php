@@ -73,18 +73,20 @@
     $(document).ready(function() {
 
         $('#idAkun').change(function() {
-
+            
             var id = $(this).val();
+            
             $.ajax({
-                url: "<?php echo site_url('master_data/getSaldoAkhir'); ?>",
+                url: "<?php echo base_url() ?>master_data/getSaldoAkhir/",
                 method: "POST",
                 data: {
                     id: id
                 },
                 async: true,
-                dataType: 'json',
+                // dataType: 'json',
                 success: function(data) {
-                    /* Fungsi formatRupiah */
+                    console.log(id);        
+                    // /* Fungsi formatRupiah */
                     function formatRupiah(angka, prefix) {
                         var number_string = angka.toString().replace(/[^,\d]/g, '').toString(),
                             split = number_string.split(','),
@@ -102,7 +104,8 @@
                         return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
                     }
                     $('#saldoAkhir').val(formatRupiah(data, ""));
-                }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {}
             });
             return false;
         });

@@ -28,8 +28,12 @@
 <script src="<?= base_url() ?>assets/bundles/izitoast/js/iziToast.min.js"></script>
 <!-- Page Specific JS File -->
 <script src="<?= base_url() ?>assets/js/page/toastr.js"></script>
+<script src="<?= base_url() ?>assets/bundles/sweetalert/sweetalert.min.js"></script>
+<!-- Page Specific JS File -->
+<script src="<?= base_url() ?>assets/js/page/sweetalert.js"></script>
 <!-- Page Specific JS File -->
 <script src="<?= base_url() ?>assets/js/page/datatables.js"></script>
+
 <script type="text/javascript">
   $(function() {
     $(document).on('click', '.btn-add', function(e) {

@@ -34,7 +34,7 @@
                                     <?php
                                     $i = 1;
                                     foreach ($supplier as $supp) { ?>
-                                        <tr>
+                                        <tr id="<?php echo $supp['idSupp'] ?>">
 
                                             <td class="text-center">
                                                 <?= $i++ ?>
@@ -47,14 +47,16 @@
                                                 <?= $supp['no_telp'] ?>
                                             </td>
                                             <td class="d-flex">
-                                                <div class="btn btn-primary d-flex align-items-center mr-2">
-                                                    <i class="fas fa-edit mr-2"></i>
-                                                    Edit
-                                                </div>
-                                                <div class="btn btn-danger d-flex align-items-center">
+                                                <a href="<?=base_url()?>master_data/edit_supplier/<?php echo $supp['idSupp'] ?>">
+                                                    <div class="btn btn-primary d-flex align-items-center mr-2">
+                                                        <i class="fas fa-edit mr-2"></i>
+                                                        Edit
+                                                    </div>
+                                                </a>
+                                                <button class="btn btn-danger d-flex align-items-center remove">
                                                     <i class="far fa-trash-alt mr-2"></i>
                                                     Hapus
-                                                </div>
+                                                </button>
                                             </td>
 
 
@@ -70,3 +72,34 @@
         </div>
     </section>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(".remove").click(function() {
+        var id = $(this).parents("tr").attr("id");
+        swal({
+            title: "Hapus Data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: '<?= base_url() ?>master_data/delete_supplier/' + id,
+                    type: 'DELETE',
+                    error: function() {
+                        alert('Something is wrong');
+                    },
+                    success: function(data) {
+                        swal({
+                            title: "Data Telah Terhapus"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }
+                });
+            } else {
+                // swal("Batal");
+            }
+        });
+    });
+</script>

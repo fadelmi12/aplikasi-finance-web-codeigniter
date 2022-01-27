@@ -16,12 +16,32 @@ class Master_Data extends CI_Controller
 
     public function saldo_awal()
     {
-        $data['akun'] = $this->Model_akun->get_akun()->result_array();
-        // echo json_encode($data['akun']);
-        $this->load->view('template/header');
-        $this->load->view('template/sidebar');
-        $this->load->view('master_data/saldo_awal', $data);
-        $this->load->view('template/footer');
+        $mulai = $this->input->post('mulai');
+        $selesai = $this->input->post('selesai');
+        if ($mulai) {
+            $data['akun'] = $this->Model_akun->get_akun_filter($selesai, $mulai)->result_array();
+            $data['tgl'] = array(
+                'mulai'      => $mulai,
+                'selesai'       => $selesai
+            );
+            // echo json_encode($data['akun']);
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('master_data/saldo_awal', $data);
+            $this->load->view('template/footer');
+        }else{
+            
+            $data['akun'] = $this->Model_akun->get_akun_saldo()->result_array();
+            $data['tgl'] = array(
+                'mulai'      => '0000-00-00',
+                'selesai'       => '0000-00-00'
+            );
+            // echo json_encode($data['akun']);
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('master_data/saldo_awal', $data);
+            $this->load->view('template/footer');
+        }
     }
 
     public function tambah_saldo()
@@ -38,7 +58,8 @@ class Master_Data extends CI_Controller
     {
         $idAkun = $this->input->post('id', TRUE);
         $data = $this->Model_akun->cek_saldo($idAkun)->row();
-        echo $data->alamat;
+        echo $data->saldoAkhir;
+        // echo $data->saldoAkhir;
     }
     public function save_saldo()
     {
@@ -47,29 +68,40 @@ class Master_Data extends CI_Controller
         $saldoAwal = filter_var($nominal, FILTER_SANITIZE_NUMBER_INT);
         // echo $saldoAwal;
         $keterangan = $this->input->post('keterangan');
-
-        $saldo_ada = $this->db->get_where('akun', ['idAkun' => $idAkun])->result();
-        $tanggal =  date("Y-m-d", time());
+        // var_dump($keterangan);
+        $saldo_ada = $this->db->get_where('saldo_awal_log', ['idAkun' => $idAkun])->row();
+        
+        // echo $saldo_awal_ada;
         if ($saldo_ada) {
-            $sql = "update akun set saldoAkhir = saldoAwal + '$saldoAwal', saldoAwal = '$saldoAwal' , updated_at = '$tanggal' where idAkun = '$idAkun'";
-            $update = $this->db->query($sql);
-            $data2 = array(
+            $data = array(
                 'idAkun'        => $idAkun,
                 'saldoAwal'       => $saldoAwal,
-                'keterangan'       => $keterangan
             );
+            $update = $this->Model_akuntansi->update_data('saldo_awal_log',$data, $idAkun, 'idAkun');
             if ($update) {
-                $this->Model_akun->insert_log($data2);
+                $data3 = array(
+                    'idAkun'        => $idAkun,
+                    'saldoAwal'       => $saldoAwal,
+                    'keterangan'       => $keterangan,
+                    'input_from'       => 'Saldo Awal'
+                );
+                $this->Model_akun->insert_log($data3);
                 redirect('master_data/saldo_awal');
             }
         } else {
-            $data2 = array(
+            $data = array(
                 'idAkun'        => $idAkun,
                 'saldoAwal'       => $saldoAwal,
-                'saldoAkhir'       => $saldoAwal
             );
-            $save = $this->Model_akun->insert_saldoAwal($data2);
-            if ($save) {
+            $update = $this->Model_akuntansi->insert_data('saldo_awal_log',$data);
+            if ($update) {
+                $data3 = array(
+                    'idAkun'        => $idAkun,
+                    'saldoAwal'       => $saldoAwal,
+                    'keterangan'       => $keterangan,
+                    'input_from'       => 'Saldo Awal'
+                );
+                $this->Model_akun->insert_log($data3);
                 redirect('master_data/saldo_awal');
             }
         }
@@ -79,11 +111,31 @@ class Master_Data extends CI_Controller
 
     public function info_perusahaan()
     {
-        $data['perusahaan'] = $this->Model_akun->get_perusahaan()->result_array();
-        $this->load->view('template/header');
-        $this->load->view('template/sidebar');
-        $this->load->view('master_data/info_perusahaan', $data);
-        $this->load->view('template/footer');
+        $mulai = $this->input->post('mulai');
+        $selesai = $this->input->post('selesai');
+
+        if ($mulai) {
+            $data['perusahaan'] = $this->Model_akun->get_perusahaan_filter($selesai, $mulai)->result_array();
+            $data['tgl'] = array(
+                'mulai'      => $mulai,
+                'selesai'       => $selesai
+            );
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('master_data/info_perusahaan', $data);
+            $this->load->view('template/footer');
+        }else{
+            $data['perusahaan'] = $this->Model_akun->get_perusahaan()->result_array();
+            $data['tgl'] = array(
+                'mulai'      => '0000-00-00',
+                'selesai'       => '0000-00-00'
+            );
+            $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('master_data/info_perusahaan', $data);
+            $this->load->view('template/footer');
+        }
+        
     }
 
     public function tambah_perusahaan()
@@ -123,12 +175,38 @@ class Master_Data extends CI_Controller
         $this->load->view('template/footer');
     }
 
-    public function tambah_akun()
+    public function jenis_akun()
     {
-
+        $data['jenis'] = $this->Model_akun->get_jenis_akun()->result_array();
+        // echo json_encode($data['akun']);
         $this->load->view('template/header');
         $this->load->view('template/sidebar');
-        $this->load->view('master_data/tambah_akun');
+        $this->load->view('master_data/jenis_akun', $data);
+        $this->load->view('template/footer');
+    }
+
+    public function delete_jenis_akun($id)
+    {
+        // $id = $this->input->post('id');
+        $this->db->delete('jenis_akun', array('idJenis' => $id));
+    }
+    public function tambah_akun()
+    {
+        $data['jenis'] = $this->Model_akun->get_jenis_akun()->result_array();
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('master_data/tambah_akun',$data);
+        $this->load->view('template/footer');
+    }
+
+    public function edit_akun($id)
+    {
+        $data['akun'] = $this->Model_akun->get_detail_akun( $id)->row();
+        $data['jenis'] = $this->Model_akun->get_jenis_akun()->result_array();
+        // echo json_encode($data['akun']);
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('master_data/edit_akun', $data);
         $this->load->view('template/footer');
     }
 
@@ -137,17 +215,44 @@ class Master_Data extends CI_Controller
         $nama = $this->input->post('namaAkun');
         $kode = $this->input->post('kodeAkun');
         $keterangan = $this->input->post('keterangan');
+        $jenis = $this->input->post('jenis');
 
         $data = array(
             'namaAkun'        => $nama,
             'kodeAkun'       => $kode,
-            'jenisAkun'           => $keterangan
+            'idJenis'           => $jenis,
+            'keterangan'           => $keterangan
         );
         $save = $this->Model_akun->insert_akun($data);
         if ($save) {
             redirect('master_data/data_perkiraan_akun');
         }
     }
+
+    public function update_akun()
+    {
+        $nama = $this->input->post('namaAkun');
+        $id = $this->input->post('idAkun');
+        $kode = $this->input->post('kodeAkun');
+        $jenis = $this->input->post('jenisAkun');
+
+        $data = array(
+            'namaAkun'        => $nama,
+            'kodeAkun'       => $kode,
+            'jenisAkun'           => $jenis
+        );
+        $save = $this->Model_akun->update($data, 'akun', $id, 'idAkun');
+        if ($save) {
+            redirect('master_data/data_perkiraan_akun');
+        }
+    }
+
+    public function delete_akun($id)
+    {
+        // $id = $this->input->post('id');
+        $this->db->delete('akun', array('idAkun' => $id));
+    }
+
 
     //Data Barang
     public function data_barang()
@@ -160,8 +265,9 @@ class Master_Data extends CI_Controller
         $this->load->view('template/footer');
     }
 
-    
-    public function tambah_barang(){
+
+    public function tambah_barang()
+    {
         $data['jenis'] = $this->Model_akun->get_jenis()->result_array();
 
         $this->load->view('template/header');
@@ -169,7 +275,19 @@ class Master_Data extends CI_Controller
         $this->load->view('master_data/tambah_barang', $data);
         $this->load->view('template/footer');
     }
-    public function save_barang(){
+
+    public function edit_barang($id)
+    {
+        $data['barang'] = $this->Model_akun->get_detail_barang('barang','idBarang', $id)->row();
+        $data['jenis'] = $this->Model_akun->get_jenis()->result_array();
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('master_data/edit_barang', $data);
+        $this->load->view('template/footer');
+    }
+
+    public function save_barang()
+    {
         $nama = $this->input->post('namaBarang');
         $kode = $this->input->post('kodeBarang');
         $jenisBarang = $this->input->post('jenisBarang');
@@ -191,6 +309,32 @@ class Master_Data extends CI_Controller
         }
     }
 
+    public function update_barang()
+    {
+        $nama = $this->input->post('nama');
+        $id = $this->input->post('idBarang');
+        $kode = $this->input->post('kodeBarang');
+        $jenis = $this->input->post('idJenis');
+        $harga = $this->input->post('harga');
+        $keterangan = $this->input->post('keterangan');
+        $data = array(
+            'kodeBarang'        => $kode,
+            'nama'       => $nama,
+            'idJenis'           => $jenis,
+            'harga'             => $harga,
+            'keterangan'        => $keterangan
+        );
+        $save = $this->Model_akun->update($data, 'barang', $id, 'idBarang');
+        if ($save) {
+            redirect('master_data/data_barang');
+        }
+    }
+
+    public function delete_barang($id)
+    {
+        // $id = $this->input->post('id');
+        $this->db->delete('barang', array('idBarang' => $id));
+    }
 
     // DATA PELANGGAN
     public function data_pelanggan()
@@ -205,14 +349,26 @@ class Master_Data extends CI_Controller
 
     public function tambah_pelanggan()
     {
-        
+
         $this->load->view('template/header');
         $this->load->view('template/sidebar');
         $this->load->view('master_data/tambah_pelanggan');
         $this->load->view('template/footer');
     }
 
-    public function save_pelanggan(){
+    public function edit_pelanggan($id)
+    {
+        $data['pelanggan'] = $this->Model_akun->get_detail('pelanggan','idPelanggan', $id)->row();
+       
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('master_data/edit_pelanggan', $data);
+        $this->load->view('template/footer');
+    }
+
+
+    public function save_pelanggan()
+    {
         $nama = $this->input->post('nama');
         $alamat = $this->input->post('alamat');
         $notelp = $this->input->post('notelp');
@@ -229,6 +385,32 @@ class Master_Data extends CI_Controller
         if ($save) {
             redirect('master_data/data_pelanggan');
         }
+    }
+
+    public function update_pelanggan()
+    {
+        $id = $this->input->post('idPelanggan');
+        $nama = $this->input->post('nama');
+        $alamat = $this->input->post('alamat');
+        $notelp = $this->input->post('notelp');
+        $status = $this->input->post('status');
+
+        $data = array(
+            'nama'        => $nama,
+            'alamat'       => $alamat,
+            'no_telp'           => $notelp,
+            'status'            => $status
+        );
+        $save = $this->Model_akun->update($data, 'pelanggan', $id, 'idPelanggan');
+        if ($save) {
+            redirect('master_data/data_pelanggan');
+        }
+    }
+
+    public function delete_pelanggan($id)
+    {
+        // $id = $this->input->post('id');
+        $this->db->delete('pelanggan', array('idPelanggan' => $id));
     }
 
     public function data_supplier()
@@ -248,7 +430,17 @@ class Master_Data extends CI_Controller
         $this->load->view('template/footer');
     }
 
-    public function save_supplier(){
+    public function edit_supplier($id)
+    {
+        $data['supplier'] = $this->Model_akun->get_detail('supplier','idSupp', $id)->row();
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('master_data/edit_supplier' ,$data);
+        $this->load->view('template/footer');
+    }
+
+    public function save_supplier()
+    {
         $nama = $this->input->post('nama');
         $alamat = $this->input->post('alamat');
         $notelp = $this->input->post('notelp');
@@ -262,7 +454,29 @@ class Master_Data extends CI_Controller
         $save = $this->Model_akun->insert_supplier($data);
         if ($save) {
             redirect('master_data/data_supplier');
-            
         }
+    }
+
+    public function update_supplier()
+    {
+        $nama = $this->input->post('nama');
+        $id = $this->input->post('idSupp');
+        $alamat = $this->input->post('alamat');
+        $no_telp = $this->input->post('notelp');
+        $data = array(
+            'nama'        => $nama,
+            'alamat'       => $alamat,
+            'no_telp'           => $no_telp
+        );
+        $save = $this->Model_akun->update($data, 'supplier', $id, 'idSupp');
+        if ($save) {
+            redirect('master_data/data_supplier');
+        }
+    }
+
+    public function delete_supplier($id)
+    {
+        // $id = $this->input->post('id');
+        $this->db->delete('supplier', array('idSupp' => $id));
     }
 }
